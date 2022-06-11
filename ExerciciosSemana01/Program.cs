@@ -69,7 +69,7 @@ float pesoChileno = real / 0.0059f;
 
 Console.WriteLine($"O valor em real corresponde a :\nUS$ {dolar:F2}\nE$ {euro:F2}\nL$ {libra:F2}\nC$ {dolarCanadense:F2}\nARS$ {pesoArgentino:F2}\nCLP$ {pesoChileno:F2}");
 */
-
+/*
 //Aula 03
 
 //Exercício 01
@@ -151,3 +151,168 @@ float salarioAtual = float.Parse(Console.ReadLine());
 float novoSalario = (salarioAtual>0 && salarioAtual<=400)? (novoSalario = salarioAtual*1.15f):(salarioAtual<=800)?(novoSalario = salarioAtual*1.12f): (salarioAtual<=1200)?(novoSalario = salarioAtual*1.1f): (salarioAtual<=2000)?(novoSalario = salarioAtual*1.07f): (novoSalario = salarioAtual*1.04f);
 
 Console.WriteLine($"O salário sofreu um reajuste de R${novoSalario-salarioAtual:F2}, correspondente a {(novoSalario/salarioAtual*100)-100:F2}%. O novo salário será de {novoSalario:F2}");
+*/
+/*
+//Aula 04
+
+//Exercício 01
+int[] vetor1 = new int [10];
+int[] vetor2 = new int [10];
+for (int i = 0; i < vetor1.Length; i++)
+{
+    Console.WriteLine($"Insira o número na posição {i+1}");
+    vetor1[i] = int.Parse(Console.ReadLine());
+    vetor2[i] = vetor1[i]*5;
+};
+Console.WriteLine("Vetor 1");
+for(int i =0;i<vetor1.Length;i++){
+    Console.Write($"{vetor1[i]} ");
+};
+Console.WriteLine(" ");
+Console.WriteLine("Vetor 2");
+for(int i =0;i<vetor2.Length;i++){
+    Console.Write($"{vetor2[i]} ");
+};
+
+//Exercício 02
+int[] valoresUsuario = new int[10];
+int[] pares = new int[10];
+int[] impares = new int[10];
+for (int i = 0; i < valoresUsuario.Length; i++)
+{
+    Console.WriteLine($"Insira o valor {i+1}");
+    int valor =int.Parse(Console.ReadLine());
+    if(valor%2==0){
+        pares[i] = valor;
+    }else{
+        impares[i]=valor;
+    };
+};
+
+Console.WriteLine("Pares");
+for (int i = 0; i < pares.Length; i++)
+{
+    if(pares[i]!=0){
+    Console.WriteLine(pares[i]);
+    };
+};
+
+Console.WriteLine("Impares");
+for (int i = 0; i < impares.Length; i++)
+{
+    if(impares[i]!=0){
+    Console.WriteLine(impares[i]);
+    };
+};
+
+//Exercício 03
+string[] palavras = new string [5];
+for (int i = 0; i < palavras.Length; i++)
+{
+    Console.WriteLine($"Insira a palavra {i+1}");
+    palavras[i] = Console.ReadLine();
+};
+palavras = palavras.OrderBy(_=>_.Length).ToArray();
+foreach (var item in palavras)
+{
+    System.Console.WriteLine(item);    
+}
+*/
+
+//Exercício 04
+string resposta = "s";
+while(resposta != "n"){
+
+    Console.WriteLine("Insira quantas rodadas você gostaria de jogar?");
+    int rodadas = int.Parse(Console.ReadLine());
+    //vitorias[0] - usuario; vitorias[1] - computador
+    int[] vitorias = new int[2];
+    //1 - pedra; 2 - papel; 3 - tesoura
+    Random rnd = new Random();
+    for (int i = 0; i < rodadas; i++)
+    {    
+        int opcaoComputador = rnd.Next(1,3);
+        Console.WriteLine("Qual sua escolha da rodada?\n1 - Pedra\n2 - Papel\n3 - Tesoura");
+        int opcaoUsuario = int.Parse(Console.ReadLine());
+        // if(opcaoUsuario != 1 || opcaoUsuario != 2 || opcaoUsuario !=3){
+        //     Console.WriteLine("Opcão inválida, escolha de novo");
+        //     i--;
+        // };
+        if(opcaoComputador == 1){
+            if(opcaoUsuario == 2){
+                vitorias[0] += 1;
+            } else if(opcaoUsuario == 3){
+                vitorias[1] += 1;
+            }
+        } else if(opcaoComputador == 2){
+            if(opcaoUsuario == 3){
+                vitorias[0] += 1;
+            } else if(opcaoUsuario == 1){
+                vitorias[1] += 1;
+            }
+        }  else if(opcaoComputador == 3){
+            if(opcaoUsuario == 1){
+                vitorias[0] += 1;
+            } else if(opcaoUsuario == 2){
+                vitorias[1] += 1;
+            }
+        }
+        // Console.WriteLine(opcaoUsuario +" "+ opcaoComputador);
+        // Console.WriteLine(vitorias[0] +" "+ vitorias[1]);
+    }
+    if(vitorias[0]> vitorias[1]){
+        Console.WriteLine($"Você ganhou com {vitorias[0]} pontos contra {vitorias[1]} vitórias do computador");
+    } else if(vitorias[0]< vitorias[1]){
+        Console.WriteLine($"O computador ganhou com {vitorias[1]} pontos contra {vitorias[0]} vitórias suas");
+    } else{
+        Console.WriteLine("Deu empate!");
+    }
+    Console.WriteLine("Deseja jogar novamente?\n 's' para sim ou 'n' para não");
+    resposta = Console.ReadLine();
+}
+
+
+/*
+//Exercício 05
+char[,] tabuleiro = {{'c','c','c'},{'c','c','c'},{'c','c','c'}};
+char jogadorX = 'X';
+char jogadorO = 'O';
+char jogadorDaVez = jogadorX;
+for(int k =0; k<tabuleiro.Length;k++){
+    Console.WriteLine($"Jogador {jogadorDaVez}, escolha a coluna onde deseja jogar:");
+    int coluna = int.Parse(Console.ReadLine());
+    Console.WriteLine($"Jogador {jogadorDaVez}, escolha a linha onde deseja jogar:");
+    int linha = int.Parse(Console.ReadLine());
+    if(tabuleiro[linha-1,coluna-1] == 'c'){
+        tabuleiro[linha-1,coluna-1] = jogadorDaVez;
+        if(jogadorDaVez == jogadorX){
+            jogadorDaVez = jogadorO;
+        } else {
+            jogadorDaVez = jogadorX;
+        }
+    }else{
+        Console.WriteLine("Posição ja ocupada, por favor escolha outra.");
+        k--;
+    };
+};
+if(tabuleiro[0,0]!='c' && tabuleiro[0,0]==tabuleiro[0,1] && tabuleiro[0,0]==tabuleiro[0,2]){
+    Console.WriteLine($"O Jogador {tabuleiro[0,0]} ganhou!");
+}else if(tabuleiro[1,0]!='c' && tabuleiro[1,0]==tabuleiro[1,1] && tabuleiro[1,0]==tabuleiro[1,2]){
+    Console.WriteLine($"O Jogador {tabuleiro[1,0]} ganhou!");
+}else if(tabuleiro[2,0]!='c' && tabuleiro[2,0]==tabuleiro[2,1] && tabuleiro[2,0]==tabuleiro[2,2]){
+    Console.WriteLine($"O Jogador {tabuleiro[2,0]} ganhou!");
+}else if(tabuleiro[0,0]!='c' && tabuleiro[0,0]==tabuleiro[1,0] && tabuleiro[0,0]==tabuleiro[2,0]){
+    Console.WriteLine($"O Jogador {tabuleiro[0,0]} ganhou!");
+}else if(tabuleiro[0,1]!='c' && tabuleiro[0,1]==tabuleiro[1,1] && tabuleiro[0,1]==tabuleiro[2,1]){
+    Console.WriteLine($"O Jogador {tabuleiro[0,1]} ganhou!");
+}else if(tabuleiro[0,2]!='c' && tabuleiro[0,2]==tabuleiro[1,2] && tabuleiro[0,2]==tabuleiro[2,2]){
+    Console.WriteLine($"O Jogador {tabuleiro[0,2]} ganhou!");
+}else if(tabuleiro[0,0]!='c' && tabuleiro[0,0]==tabuleiro[1,1] && tabuleiro[0,0]==tabuleiro[2,2]){
+    Console.WriteLine($"O Jogador {tabuleiro[0,0]} ganhou!");
+}else if(tabuleiro[0,2]!='c' && tabuleiro[0,2]==tabuleiro[1,1] && tabuleiro[0,2]==tabuleiro[2,0]){
+    Console.WriteLine($"O Jogador {tabuleiro[0,2]} ganhou!");
+}else{
+    Console.WriteLine("Deu velha!");
+};
+*/
+
