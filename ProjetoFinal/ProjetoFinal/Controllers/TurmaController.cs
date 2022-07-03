@@ -23,13 +23,19 @@ namespace ProjetoFinal.Controllers
 
         // GET: api/Turma
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Turma>>> GetTurma()
+        public async Task<JsonResult> GetTurma()
         {
             if (_context.Turma == null)
             {
-                return NotFound();
+                return new JsonResult("Ainda não há turmas cadastradas.");
             }
-            return await _context.Turma.ToListAsync();
+
+            List<Turma> turma = await _context.Turma.ToListAsync();
+
+            return new JsonResult(new
+            {
+                TurmasAtivas = turma.FindAll(e => e.Ativo == true),
+            });
         }
 
         // GET: api/Turma/5
@@ -109,11 +115,19 @@ namespace ProjetoFinal.Controllers
             {
                 return NotFound();
             }
+            if(!turma.Alunos.Any())
+            {
+                _context.Turma.Remove(turma);
+                await _context.SaveChangesAsync();
 
-            _context.Turma.Remove(turma);
-            await _context.SaveChangesAsync();
+                return NoContent();
+            }
+            else
+            {
+                throw new Exception("Não é possível deletar uma turma que contenha alunos.");
+            }
 
-            return NoContent();
+            
         }
 
         private bool TurmaExists(int id)

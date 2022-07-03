@@ -1,4 +1,6 @@
-﻿namespace ProjetoFinal.Models
+﻿using System.Text.Json.Serialization;
+
+namespace ProjetoFinal.Models
 {
     public class Turma
     {
@@ -7,6 +9,7 @@
         public bool Ativo { get; set; }
 
         #region Navigation Properties
+        [JsonIgnore]
         public virtual List<Aluno>? Alunos { get; set; }
         #endregion
     }

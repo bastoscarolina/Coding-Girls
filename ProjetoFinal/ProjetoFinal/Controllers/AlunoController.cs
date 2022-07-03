@@ -25,13 +25,18 @@ namespace ProjetoFinal.Controllers
 
             // GET: api/Aluno
             [HttpGet]
-            public async Task<ActionResult<IEnumerable<Aluno>>> GetAlunos()
+            public async Task<JsonResult> GetAlunos()
             {
                 if (_context.Aluno == null)
                 {
-                    return NotFound();
+                    return new JsonResult("Ainda não há alunos cadastrados.");
                 }
-                return await _context.Aluno.ToListAsync();
+              
+                List<Aluno> aluno =  await _context.Aluno.ToListAsync();
+                
+                return new JsonResult(new {
+                    AlunosAtivos = aluno.FindAll(e => e.Turma.Ativo == true),
+                });
             }
 
             // GET: api/Aluno/5
@@ -57,20 +62,31 @@ namespace ProjetoFinal.Controllers
             [HttpPut("{id}")]
             public async Task<IActionResult> PutAluno(int id, Aluno aluno)
             {
-                if (id != aluno.ID)
+                if ( id != aluno.ID)
                 {
                     return BadRequest();
                 }
-
                 _context.Entry(aluno).State = EntityState.Modified;
+
+                var turma = await _context.Turma.FindAsync(aluno.TurmaID);
 
                 try
                 {
-                    await _context.SaveChangesAsync();
+                   
+                    if ( TurmaExists(aluno.TurmaID) && turma.Ativo)
+                    {
+                       await _context.SaveChangesAsync();
+                    }
+                    else
+                    {
+                        throw new Exception("Não é possível mudar o aluno para esta turma pois ela não existe ou está inativa");
+                    }
+
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!AlunoExists(id))
+                    
+                    if (!AlunoExists(aluno.ID))
                     {
                         return NotFound();
                     }
@@ -83,19 +99,30 @@ namespace ProjetoFinal.Controllers
                 return NoContent();
             }
 
-            // POST: api/Aluno
-            // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-            [HttpPost]
+       
+            
+
+        // POST: api/Aluno
+        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        [HttpPost]
             public async Task<ActionResult<Aluno>> PostAluno(Aluno aluno)
             {
                 if (_context.Aluno == null)
                 {
                     return Problem("Entity set 'EscolaContext.Alunos'  is null.");
                 }
-                _context.Aluno.Add(aluno);
-                await _context.SaveChangesAsync();
+                if (aluno.TurmaID > 0 && TurmaExists(aluno.TurmaID))
+                {
+                    _context.Aluno.Add(aluno);
+                    await _context.SaveChangesAsync();
 
-                return CreatedAtAction("GetAluno", new { id = aluno.ID }, aluno);
+                    return CreatedAtAction("GetAluno", new { id = aluno.ID }, aluno);
+                }
+                else
+                {
+                    throw new Exception("Só é possível cadastrar um aluno com uma turma válida.");
+                }
+                
             }
 
             // DELETE: api/Aluno/5
@@ -122,7 +149,11 @@ namespace ProjetoFinal.Controllers
             {
                 return (_context.Aluno?.Any(e => e.ID == id)).GetValueOrDefault();
             }
-        }
+            private bool TurmaExists(int id)
+            {
+                return (_context.Turma?.Any(e => e.ID == id)).GetValueOrDefault();
+            }
+    }
 
     
 }
